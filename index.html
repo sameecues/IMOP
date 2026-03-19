@@ -7,7 +7,6 @@
 <link rel="icon" type="image/png" href="icon-192.png">
     
 <link rel="apple-touch-icon" href="icon-192.png" />
-<!-- Permite que o app abra em tela cheia -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -27,7 +26,7 @@
             min-height: 100vh;
             padding: 20px;
             color: #333;
-            position: relative; /* para botão fixo */
+            position: relative;
         }
 
         .container {
@@ -408,7 +407,7 @@
 }
 
 #darkModeBtn {
-    top: 90px;  /* 20 + 70 */
+    top: 90px;
     background: #424242;
 }
 #darkModeBtn:hover {
@@ -423,7 +422,7 @@ body.dark-mode #darkModeBtn:hover {
 }
 
 #copySummaryBtn {
-    top: 160px;  /* 90 + 70 */
+    top: 160px;
     background: #2196F3;
 }
 #copySummaryBtn:hover { 
@@ -431,7 +430,7 @@ body.dark-mode #darkModeBtn:hover {
 }
 
 #sendWhatsappBtn {
-    top: 230px;  /* 160 + 70 */
+    top: 230px;
     background: #25D366;
 }
 #sendWhatsappBtn:hover { 
@@ -439,7 +438,7 @@ body.dark-mode #darkModeBtn:hover {
 }
 
 #generatePdfBtn {
-    top: 300px;  /* 230 + 70 */
+    top: 300px;
     background: #FF9800;
 }
 #generatePdfBtn:hover { 
@@ -802,7 +801,6 @@ body.dark-mode .container-verde {
   transition: all 0.25s ease;
 }
 
-/* botão ativo */
 .cat-btn.active {
   background: white;
   box-shadow: 0 3px 8px rgba(0,0,0,0.15);
@@ -933,19 +931,16 @@ body.dark-mode .container-verde {
   </div>
 </div>
 
-            <!-- Incidente -->
             <div class="section">
                 <div class="section-title">Incidente</div>
                 <input type="text" class="input-field" id="incidente" placeholder="Describir el incidente..." />
             </div>
 
-            <!-- Dirección -->
             <div class="section">
                 <div class="section-title">Dirección</div>
                 <input type="text" class="input-field" id="direccion" placeholder="Dirección del incidente..." />
             </div>
 
-            <!-- Procedimiento -->
 <div class="section">
     <div class="section-title">Procedimiento</div>
     <div class="counter-group">
@@ -998,7 +993,6 @@ body.dark-mode .container-verde {
 
 <div class="two-columns">
 
-<!-- Sexo -->
 <div class="section">
     <div class="section-title">Sexo</div>
     <div class="counter-group">
@@ -1035,7 +1029,6 @@ body.dark-mode .container-verde {
     </div>
 </div>
 
-<!-- Edad -->
 <div class="section">
     <div class="section-title">Edad</div>
     <div class="counter-group">
@@ -1073,7 +1066,6 @@ body.dark-mode .container-verde {
 </div>
 </div>
 
-<!-- Dotación -->
 <div class="section">
     <div class="section-title">Dotación</div>
     <div class="counter-group">
@@ -1100,7 +1092,6 @@ body.dark-mode .container-verde {
     </div>
 </div>
 
-            <!-- Destino traslados -->
             <div class="section">
                 <div class="section-title">Destino traslados (hospitales)</div>
                 <div id="hospitalsContainer">
@@ -1140,14 +1131,12 @@ body.dark-mode .container-verde {
             </div>
 
 <div class="two-columns">
-    <!-- Intervención -->
     <div class="section">
         <div class="section-title">Intervención</div>
         <textarea class="textarea-field" id="intervencion"
             placeholder="Datos de la intervención..."></textarea>
     </div>
 
-    <!-- Notas -->
     <div class="section">
         <div class="section-title">Notas</div>
         <textarea class="textarea-field" id="notas"
