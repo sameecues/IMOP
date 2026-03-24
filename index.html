@@ -956,6 +956,31 @@ body.dark-mode .container-verde {
     vertical-align: middle;
 }
 
+.date-picker-custom {
+    padding: 8px 12px;
+    border: 2px solid #1e3c72;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: bold;
+    color: #1e3c72;
+    background-color: #f8f9fa;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.date-picker-custom:focus {
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.2);
+    transform: translateY(-1px);
+}
+
+.date-picker-custom::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(15%) sepia(50%) saturate(5000%) hue-rotate(200deg) brightness(100%) contrast(100%);
+}
+
     </style>
 </head>
 <body>
@@ -1313,8 +1338,12 @@ body.dark-mode .container-verde {
 </div>
 
         <div class="content" style="padding: 20px;">
-            
-            <div style="margin-bottom: 25px;">
+
+
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 15px; gap: 10px; padding: 0 5px;">
+    <label for="history-date-picker" style="font-size: 0.85em; font-weight: bold; color: #1e3c72;">HISTORIAL:</label>
+    <input type="date" id="history-date-picker" onchange="changeHistoryDate(this.value)" class="date-picker-custom">
+</div>
                 <div class="input-group" style="margin-bottom: 15px;">
                     <label style="font-weight: bold; color: #1e3c72; display: block; margin-bottom: 5px;">TIPO DE INCIDENTE</label>
                     <input type="text" id="alert-type" placeholder="Ej. COLISIÓN VEHICULAR" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px;">
@@ -2448,13 +2477,15 @@ if (!firebase.apps.length) {
 const database = firebase.database();
 
 function saveToDatabase() {
-    database.ref('alertas').set(alertsList)
-    .then(() => console.log("Sincronizado con la nube"))
-    .catch(err => console.error("Error de sincronización:", err));
+    const fecha = getTodayDate();
+    database.ref('alertas/' + fecha).set(alertsList)
+    .then(() => console.log("Sincronizado en la fecha: " + fecha))
+    .catch(err => console.error("Error:", err));
 }
 
 function loadFromDatabase() {
-    database.ref('alertas').on('value', (snapshot) => {
+    const fecha = getTodayDate();
+    database.ref('alertas/' + fecha).on('value', (snapshot) => {
         const data = snapshot.val();
         alertsList = data ? Object.values(data) : [];
         renderAlerts();
@@ -2463,7 +2494,26 @@ function loadFromDatabase() {
 }
 
 loadFromDatabase();
+
+document.getElementById('history-date-picker').value = getTodayDate();
+
+function getTodayDate() {
+    const d = new Date();
+    return d.toISOString().split('T')[0];
+}
+
+function changeHistoryDate(nuevaFecha) {
+    // Quitamos el "oído" de la fecha anterior
+    database.ref('alertas').off(); 
     
+    // Escuchamos la nueva fecha seleccionada
+    database.ref('alertas/' + nuevaFecha).on('value', (snapshot) => {
+        const data = snapshot.val();
+        alertsList = data ? Object.values(data) : [];
+        renderAlerts();
+        renderSummary();
+    });
+}    
 </script>
 </body>
 </html>
