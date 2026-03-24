@@ -2136,7 +2136,6 @@ function saveAlert() {
         return;
     }
 
-    // Como ahora la edición se hace en el card, aquí solo creamos nuevos
     alertsList.push({ type, location, notes });
 
     // Limpiar formulario de arriba
@@ -2147,6 +2146,30 @@ function saveAlert() {
     saveToLocalStorage();
     renderAlerts();
     renderSummary();
+}
+
+    const tokenBot = 8756808383:AAHfDHfF1xTGiabEZREpIMmP7vN-REgFA7U; 
+    const chatId = 132294074;
+
+let textoTelegram = `*${location}*\n${type}`;
+    if (notes && notes !== '') {
+        textoTelegram += ` - ${notes}`;
+    }
+    if (!textoTelegram.endsWith('.')) {
+        textoTelegram += '.';
+    }
+    textoTelegram += ` SAME en camino.`;
+
+    // 3. Enviamos la orden a Telegram (invisible para el usuario)
+    const urlTelegram = `https://api.telegram.org/bot${tokenBot}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(textoTelegram)}&parse_mode=Markdown`;
+    
+    fetch(urlTelegram)
+        .then(response => {
+            if (!response.ok) {
+                console.error("Error al enviar a Telegram");
+            }
+        })
+        .catch(error => console.error("Error de red con Telegram:", error));
 }
 
 // 3. Renderizar las Tarjetas
