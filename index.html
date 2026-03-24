@@ -2437,6 +2437,43 @@ function clearAllAlerts() {
     }
 }
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBuA90H8OQKMEhL3X1EPNlv2cA4mz-zopM",
+  authDomain: "imop-89ab8.firebaseapp.com",
+  databaseURL: https://console.firebase.google.com/u/0/project/imop-89ab8/firestore/databases/-default-/data,
+  projectId: "imop-89ab8",
+  storageBucket: "imop-89ab8.firebasestorage.app",
+  messagingSenderId: "858280457517",
+  appId: "1:858280457517:web:5eab61ef1db809194c0fa4",
+  measurementId: "G-VNV7RQB73J"
+};
+
+// Inicializar Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const database = firebase.database();
+
+// Función para guardar (reemplaza la de LocalStorage)
+function saveToDatabase() {
+    database.ref('alertas').set(alertsList)
+    .then(() => console.log("Sincronizado con la nube"))
+    .catch(err => console.error("Error de sincronización:", err));
+}
+
+// Función para cargar en tiempo real
+function loadFromDatabase() {
+    database.ref('alertas').on('value', (snapshot) => {
+        const data = snapshot.val();
+        alertsList = data ? Object.values(data) : [];
+        renderAlerts();
+        renderSummary();
+    });
+}
+
+// Ejecutar carga al iniciar
+loadFromDatabase();
+
 </script>
 </body>
 </html>
