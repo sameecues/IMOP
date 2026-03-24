@@ -10,6 +10,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=0.80, maximum-scale=0.80, user-scalable=no">
     <title>IMOP</title>
@@ -952,6 +955,7 @@ body.dark-mode .container-verde {
     object-fit: contain;
     vertical-align: middle;
 }
+
     </style>
 </head>
 <body>
@@ -2085,7 +2089,7 @@ let currentlyEditingIndex = null;
 function loadFromLocalStorage() {
     const savedData = localStorage.getItem('misAlertasOperativas');
     if (savedData) {
-        alertsList = JSON.parse(savedData);
+        alertsList = JSON.parse(savedData); // Convertimos el texto guardado de vuelta a una lista
         renderAlerts();
         renderSummary();
     }
@@ -2136,7 +2140,7 @@ function saveAlert() {
     document.getElementById('alert-location').value = '';
     document.getElementById('alert-notes').value = '';
 
-    saveToLocalStorage();
+    saveToDatabase();
     renderAlerts();
     renderSummary();
 }
@@ -2220,17 +2224,20 @@ else {
     });
 }
 
+// --- NUEVAS FUNCIONES PARA LA EDICIÓN INLINE ---
+
 function startInlineEdit(index) {
-    currentlyEditingIndex = index;
-    renderAlerts();
+    currentlyEditingIndex = index; // Le decimos al sistema qué card estamos editando
+    renderAlerts(); // Recargamos las alertas para que muestre el formulario en ese card
 }
 
 function cancelInlineEdit() {
     currentlyEditingIndex = null; // Cancelamos la edición
-    renderAlerts();
+    renderAlerts(); // Recargamos para volver a la vista normal
 }
 
 function saveInlineEdit(index) {
+    // Tomamos los valores de las nuevas cajas de texto generadas en el card
     const newType = document.getElementById(`edit-type-${index}`).value.trim();
     const newLocation = document.getElementById(`edit-location-${index}`).value.trim().toUpperCase();
     const newNotes = document.getElementById(`edit-notes-${index}`).value.trim();
@@ -2240,10 +2247,14 @@ function saveInlineEdit(index) {
         return;
     }
 
+    // Actualizamos el array con la nueva información
     alertsList[index] = { type: newType, location: newLocation, notes: newNotes };
+    
+    // Salimos del modo edición
     currentlyEditingIndex = null; 
     
-    saveToLocalStorage();
+    // Actualizamos la pantalla y el resumen general
+    saveToDatabase();
     renderAlerts();
     renderSummary();
 }
@@ -2307,7 +2318,7 @@ function updateSummaryTotal() {
 function deleteAlert(index) {
     if(confirm("¿Seguro que deseas borrar este incidente?")) {
         alertsList.splice(index, 1);
-        saveToLocalStorage();
+        saveToDatabase();
         renderAlerts();
         renderSummary();
     }
@@ -2331,7 +2342,9 @@ function toggleMap(index) {
 
 function shareWhatsApp(index) {
     const alert = alertsList[index];
+    
     let text = `*${alert.location}*\n${alert.type}`;
+    
     if (alert.notes && alert.notes.trim() !== '') {
         text += ` - ${alert.notes}`;
     }
@@ -2419,9 +2432,9 @@ function clearAllAlerts() {
 }
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBuA90H8OQKMEhL3X1EPNlv2cA4mz-zopM",
+  apiKey: "TU_API_KEY",
   authDomain: "imop-89ab8.firebaseapp.com",
-  databaseURL: "https://imop-89ab8-default-rtdb.firebaseio.com/"
+  databaseURL: "https://imop-89ab8-default-rtdb.firebaseio.com/",
   projectId: "imop-89ab8",
   storageBucket: "imop-89ab8.firebasestorage.app",
   messagingSenderId: "858280457517",
@@ -2450,7 +2463,7 @@ function loadFromDatabase() {
 }
 
 loadFromDatabase();
-
+    
 </script>
 </body>
 </html>
