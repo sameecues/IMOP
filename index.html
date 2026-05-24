@@ -817,6 +817,7 @@ body.dark-mode .container-verde {
 #toggleMethaneBtn.active { color: #2E7D32; }
 #toggleObitosBtn.active { color: #B71C1C; }
 #toggleEvacuadosBtn.active { color: #1565C0; }
+#toggleAtrapadosBtn.active { color: #E65100; }
 
 /* Estilos para las pestañas */
 .tabs-container {
@@ -1067,6 +1068,8 @@ body.dark-mode .container-verde {
   <button id="toggleEvacuadosBtn" class="cat-btn" type="button">
     EVACUADOS
   </button>
+  
+  <button id="toggleAtrapadosBtn" class="cat-btn" type="button">ATRAPADOS</button>
 </div>
 
 <!-- METHANE oculto -->
@@ -1163,6 +1166,17 @@ body.dark-mode .container-verde {
                     </div>
                 </div>
             </div>
+<div>
+<div class="section" id="AtrapadosSection" style="display:none;">
+    <div class="section-title">Atrapados</div>
+    <div id="AtrapadosContainer">
+        <div class="obito-row">
+            <label for="numeroAtrapados">Número de Atrapados:</label>
+            <input type="number" id="numeroAtrapados" min="0" value="0" />
+        </div>
+    </div>
+</div>
+</div>            
 
 <div class="two-columns">
 
@@ -1510,6 +1524,7 @@ function resetAllCategories() {
     
     const numeroObitosInput = document.getElementById('numeroObitos');
     const numeroEvacuadosInput = document.getElementById('numeroEvacuados');
+    const numeroAtrapadosInput = document.getElementById('numeroAtrapados');
     
     if (numeroObitosInput) {
         numeroObitosInput.value = '0';
@@ -1518,6 +1533,11 @@ function resetAllCategories() {
     if (numeroEvacuadosInput) {
         numeroEvacuadosInput.value = '0';
     }
+    
+    if (numeroAtrapadosInput) {
+        numeroAtrapadosInput.value = '0';
+    }
+
     
     const obitosContainer = document.getElementById('obitosContainer');
     if (obitosContainer) {
@@ -1535,6 +1555,16 @@ function resetAllCategories() {
             <div class="obito-row">
                 <label>Evacuados:</label>
                 <input type="number" id="numeroEvacuados" min="0" value="0" style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+        `;
+    }
+    
+    const atrapadosContainer = document.getElementById('AtrapadosContainer');
+    if (atrapadosContainer) {
+        atrapadosContainer.innerHTML = `
+            <div class="obito-row">
+                <label>Atrapados:</label>
+                <input type="number" id="numeroAtrapados" min="0" value="0" style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
             </div>
         `;
     }
@@ -1846,12 +1876,16 @@ function generateSummary() {
     const evacuadosInputs = document.querySelectorAll('#EvacuadosContainer input');
     let evacuadosTotal = 0;
     evacuadosInputs.forEach(input => { evacuadosTotal += parseInt(input.value) || 0; });
+    const atrapadosInputs = document.querySelectorAll('#AtrapadosContainer input');
+    let atrapadosTotal = 0;
+    atrapadosInputs.forEach(input => { atrapadosTotal += parseInt(input.value) || 0; });
 
     let infoAdicional = ''; 
-    if (obitosTotal > 0 || evacuadosTotal > 0) {
+    if (obitosTotal > 0 || evacuadosTotal > 0 || atrapadosTotal > 0) {
         infoAdicional = '\nInformación Adicional:\n';
         if (obitosTotal > 0) infoAdicional += `- *Óbitos: ${obitosTotal}*\n`;
         if (evacuadosTotal > 0) infoAdicional += `- Evacuados: ${evacuadosTotal}\n`;
+        if (atrapadosTotal > 0) infoAdicional += `- Atrapados: ${atrapadosTotal}\n`;
     }
 
     let intervencionResumen = '';
@@ -1952,6 +1986,19 @@ document.getElementById('toggleMethaneBtn').addEventListener('click', () => {
                 btn.textContent = 'EVACUADOS';    
                         }
         });
+        
+        document.getElementById('toggleAtrapadosBtn').addEventListener('click', () => {
+            const AtrapadosSection = document.getElementById('AtrapadosSection');
+            const btn = document.getElementById('toggleAtrapadosBtn');
+            if (AtrapadosSection.style.display === 'none') {
+                AtrapadosSection.style.display = 'block';
+                btn.textContent = 'ATRAPADOS';
+            } else {
+                AtrapadosSection.style.display = 'none';
+                btn.textContent = 'ATRAPADOS';    
+            }
+        });
+        
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -2109,6 +2156,10 @@ document.getElementById("toggleObitosBtn").onclick = function () {
 };
 
 document.getElementById("toggleEvacuadosBtn").onclick = function () {
+  setActiveCategory(this);
+};
+
+document.getElementById("toggleAtrapadosBtn").onclick = function () {
   setActiveCategory(this);
 };
 
